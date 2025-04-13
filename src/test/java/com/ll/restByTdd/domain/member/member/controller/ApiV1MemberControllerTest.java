@@ -127,4 +127,26 @@ public class ApiV1MemberControllerTest {
                 .andExpect(jsonPath("$.data.item.nickname").value("유저1"))
                 .andExpect(jsonPath("$.data.apiKey").value(member.getApiKey()));
     }
+
+    @Test
+    @DisplayName("내 정보, with user1")
+    void t4() throws Exception {
+        Member member = memberService.findByUsername("user1").get();
+
+        ResultActions resultActions = mvc
+                .perform(
+                        get("/api/v1/members/me")
+                                .header("Authorization", "bearer " + member.getApiKey())
+                )
+                .andDo(print());
+
+        resultActions
+                .andExpect(handler().handlerType(ApiV1MemberController.class))
+                .andExpect(handler().methodName("me"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(member.getId()))
+                .andExpect(jsonPath("$.createDate").isString())
+                .andExpect(jsonPath("$.modifyDate").isString())
+                .andExpect(jsonPath("$.nickname").value(member.getNickname()));
+    }
 }
