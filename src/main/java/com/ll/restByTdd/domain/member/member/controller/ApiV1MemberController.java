@@ -6,6 +6,8 @@ import com.ll.restByTdd.domain.member.member.service.MemberService;
 import com.ll.restByTdd.global.exceptions.ServiceException;
 import com.ll.restByTdd.global.rq.Rq;
 import com.ll.restByTdd.global.rsData.RsData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,19 +15,22 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/members")
 @RequiredArgsConstructor
 public class ApiV1MemberController {
-    private final Rq rq;
     private final MemberService memberService;
+    private final Rq rq;
 
     record MemberJoinReqBody(
+            @NotBlank
             String username,
+            @NotBlank
             String password,
+            @NotBlank
             String nickname
     ) {
     }
 
     @PostMapping("/join")
     public RsData<MemberDto> join(
-            @RequestBody MemberJoinReqBody reqBody
+            @RequestBody @Valid MemberJoinReqBody reqBody
     ) {
         Member member = memberService.join(reqBody.username, reqBody.password, reqBody.nickname);
 
@@ -36,8 +41,11 @@ public class ApiV1MemberController {
         );
     }
 
+
     record MemberLoginReqBody(
+            @NotBlank
             String username,
+            @NotBlank
             String password
     ) {
     }
@@ -50,7 +58,7 @@ public class ApiV1MemberController {
 
     @PostMapping("/login")
     public RsData<MemberLoginResBody> login(
-            @RequestBody MemberLoginReqBody reqBody
+            @RequestBody @Valid MemberLoginReqBody reqBody
     ) {
         Member member = memberService
                 .findByUsername(reqBody.username)
