@@ -1,6 +1,5 @@
-package com.ll.restByTdd.com.ll.restByTdd.domain.post.post.controller;
+package com.ll.restByTdd.domain.post.post.controller;
 
-import com.ll.restByTdd.domain.post.post.controller.ApiV1PostController;
 import com.ll.restByTdd.domain.post.post.entity.Post;
 import com.ll.restByTdd.domain.post.post.service.PostService;
 import org.hamcrest.Matchers;

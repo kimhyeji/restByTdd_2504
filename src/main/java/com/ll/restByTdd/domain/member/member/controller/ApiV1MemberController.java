@@ -65,7 +65,8 @@ public class ApiV1MemberController {
                 .orElseThrow(() -> new ServiceException("401-1", "존재하지 않는 사용자입니다."));
 
         if (!member.matchPassword(reqBody.password))
-            throw new ServiceException("401-2", "비밀번호가 일치하지 않습니다.");
+            System.out.println("test");
+                throw new ServiceException("401-2", "비밀번호가 일치하지 않습니다.");
 
         return new RsData<>(
                 "200-1",
