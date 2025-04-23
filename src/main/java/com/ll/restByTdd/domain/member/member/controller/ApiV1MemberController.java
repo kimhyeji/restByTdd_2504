@@ -56,27 +56,7 @@ public class ApiV1MemberController {
     ) {
     }
 
-    @PostMapping("/login")
-    public RsData<MemberLoginResBody> login(
-            @RequestBody @Valid MemberLoginReqBody reqBody
-    ) {
-        Member member = memberService
-                .findByUsername(reqBody.username)
-                .orElseThrow(() -> new ServiceException("401-1", "존재하지 않는 사용자입니다."));
 
-        if (!member.matchPassword(reqBody.password))
-            System.out.println("test");
-        throw new ServiceException("401-2", "비밀번호가 일치하지 않습니다.");
-
-        return new RsData<>(
-                "200-1",
-                "%s님 환영합니다.".formatted(member.getName()),
-                new MemberLoginResBody(
-                        new MemberDto(member),
-                        member.getApiKey()
-                )
-        );
-    }
 
     @GetMapping("/me")
     public MemberDto me() {
