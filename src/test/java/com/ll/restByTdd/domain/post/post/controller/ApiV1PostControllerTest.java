@@ -1,7 +1,8 @@
-package com.ll.restByTdd.domain.post.post.controller;
+package com.ll.restByTdd.com.ll.restByTdd.domain.post.post.controller;
 
 import com.ll.restByTdd.domain.member.member.entity.Member;
 import com.ll.restByTdd.domain.member.member.service.MemberService;
+import com.ll.restByTdd.domain.post.post.controller.ApiV1PostController;
 import com.ll.restByTdd.domain.post.post.entity.Post;
 import com.ll.restByTdd.domain.post.post.service.PostService;
 import org.hamcrest.Matchers;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApiV1PostControllerTest {
     @Autowired
     private PostService postService;
+    @Autowired
     private MemberService memberService;
     @Autowired
     private MockMvc mvc;
@@ -81,7 +83,6 @@ public class ApiV1PostControllerTest {
     void t3() throws Exception {
         Member actor = memberService.findByUsername("user1").get();
 
-        Post post;
         ResultActions resultActions = mvc
                 .perform(
                         post("/api/v1/posts")
@@ -98,20 +99,23 @@ public class ApiV1PostControllerTest {
                 )
                 .andDo(print());
 
-        post = postService.findLatest().get();
+        Post post = postService.findLatest().get();
 
         assertThat(post.getAuthor()).isEqualTo(actor);
 
         resultActions
                 .andExpect(handler().handlerType(ApiV1PostController.class))
-                .andExpect(handler().methodName("item"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(post.getId()))
-                .andExpect(jsonPath("$.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
-                .andExpect(jsonPath("$.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
-                .andExpect(jsonPath("$.authorId").value(post.getAuthor().getId()))
-                .andExpect(jsonPath("$.authorName").value(post.getAuthor().getName()))
-                .andExpect(jsonPath("$.title").value(post.getTitle()))
-                .andExpect(jsonPath("$.content").value(post.getContent()));
+                .andExpect(handler().methodName("write"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.resultCode").value("201-1"))
+                .andExpect(jsonPath("$.msg").value("%d번 글이 작성되었습니다.".formatted(post.getId())))
+                .andExpect(jsonPath("$.data.id").value(post.getId()))
+                .andExpect(jsonPath("$.data.createDate").value(Matchers.startsWith(post.getCreateDate().toString().substring(0, 25))))
+                .andExpect(jsonPath("$.data.modifyDate").value(Matchers.startsWith(post.getModifyDate().toString().substring(0, 25))))
+                .andExpect(jsonPath("$.data.authorId").value(post.getAuthor().getId()))
+                .andExpect(jsonPath("$.data.authorName").value(post.getAuthor().getName()))
+                .andExpect(jsonPath("$.data.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.data.content").value(post.getContent()));
     }
+
 }
