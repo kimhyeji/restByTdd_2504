@@ -26,10 +26,10 @@ public class ApiV1PostController {
 
     record PostWriteReqBody(
             @NotBlank
-            @Length(min = 2)
+            @Length(min = 2, max = 100)
             String title,
             @NotBlank
-            @Length(min = 2)
+            @Length(min = 2, max = 10000000)
             String content
     ) {
     }
@@ -48,4 +48,6 @@ public class ApiV1PostController {
                 new PostDto(post)
         );
     }
+
+
 }
